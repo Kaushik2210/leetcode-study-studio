@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LeetCode Study Studio</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Study Studio</h1>
+      <p class="sub">Themes and a learning layer for LeetCode</p>
+    </div>
+    <label class="switch" title="Turn everything on or off">
+      <input type="checkbox" id="enabled" role="switch" aria-label="Enable Study Studio">
+      <span class="track"></span>
+    </label>
+  </header>
+
+  <main id="main">
+    <section aria-labelledby="h-theme">
+      <h2 id="h-theme">Theme</h2>
+      <div class="themes" role="radiogroup" aria-labelledby="h-theme" id="themes"></div>
+      <div id="studio" class="card" hidden>
+        <div class="row">
+          <button class="btn" id="pick" type="button">Choose background image</button>
+          <button class="btn quiet" id="clearBg" type="button" hidden>Remove</button>
+          <input type="file" id="file" accept="image/*" hidden>
+        </div>
+        <label class="field" for="overlay">
+          <span>Readability overlay <output id="overlayVal"></output></span>
+          <input type="range" id="overlay" min="35" max="95" step="5">
+        </label>
+        <p class="note">Your image is resized and kept in this browser only.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-learn">
+      <h2 id="h-learn">Learning</h2>
+      <div class="card list">
+        <label class="item"><span><b>Blind mode</b><small>Blur difficulty and topics until you click them</small></span>
+          <span class="switch"><input type="checkbox" id="blind" role="switch"><span class="track"></span></span></label>
+        <label class="item"><span><b>Solution lock</b><small>Hint ladder before the editorial and solutions</small></span>
+          <span class="switch"><input type="checkbox" id="lock" role="switch"><span class="track"></span></span></label>
+        <label class="item sub" id="lockRow"><span><b>Unlock after</b><small>Minutes of active work</small></span>
+          <select id="lockMinutes" aria-label="Minutes before solutions unlock">
+            <option value="5">5 min</option><option value="10">10 min</option><option value="15">15 min</option>
+            <option value="25">25 min</option><option value="40">40 min</option>
+          </select></label>
+        <label class="item"><span><b>Timer</b><small>Counts only time you are actually working</small></span>
+          <span class="switch"><input type="checkbox" id="timer" role="switch"><span class="track"></span></span></label>
+        <label class="item"><span><b>Result moments</b><small>Short themed banner on each verdict</small></span>
+          <span class="switch"><input type="checkbox" id="celebrate" role="switch"><span class="track"></span></span></label>
+        <label class="item"><span><b>Animations</b><small>Follows your system setting by default</small></span>
+          <select id="motion" aria-label="Animations"><option value="auto">Automatic</option><option value="off">Off</option></select></label>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-due">
+      <h2 id="h-due">Due for review <span class="count" id="dueCount"></span></h2>
+      <ul class="due" id="due"></ul>
+      <p class="note" id="dueEmpty" hidden>Nothing due. Solve a problem and rate how it went to schedule it.</p>
+    </section>
+
+    <section aria-labelledby="h-stats">
+      <h2 id="h-stats">Progress</h2>
+      <div class="stats">
+        <div><b id="sStreak">0</b><span>day streak</span></div>
+        <div><b id="sToday">0</b><span>solved today</span></div>
+        <div><b id="sSolved">0</b><span>solved total</span></div>
+        <div><b id="sTime">0h</b><span>time spent</span></div>
+      </div>
+      <h3>Where mistakes come from</h3>
+      <ul class="bars" id="mistakes"></ul>
+      <p class="note" id="mistakesEmpty" hidden>No mistakes logged yet.</p>
+    </section>
+  </main>
+
+  <footer>
+    <button class="btn quiet" id="export" type="button">Export my data</button>
+    <span class="note">Everything stays in your browser.</span>
+  </footer>
+  <script src="srs.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

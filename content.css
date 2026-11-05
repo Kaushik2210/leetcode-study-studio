@@ -1,0 +1,226 @@
+/* LeetCode Study Studio.
+   Part 1 recolours LeetCode with four themes. LeetCode mixes CSS variables with fixed Tailwind colours, so each theme
+   sets the variables it exposes (--layer-*, --fill-*, --text-*, --sd-*) and also overrides the surface and text
+   classes that ignore them. Everything is gated on html[data-lcs-theme], so with the extension off nothing applies.
+   Part 2 styles the learning layer (blind mode, dock, dialogs, banners). */
+
+/* ---------- Theme tokens ---------- */
+html[data-lcs-theme] {
+  --lcs-alpha: 1;
+  --lcs-accent-ink: #0b0d12;
+  --lcs-radius: 8px;
+}
+html[data-lcs-theme="midnight"] {
+  color-scheme: dark;
+  --lcs-bg0: #0a0c11; --lcs-bg1: #11141b; --lcs-bg2: #191d27; --lcs-bg3: #232837;
+  --lcs-text: #e9ecf3; --lcs-muted: #a0a9bb; --lcs-faint: #6f788b;
+  --lcs-border: rgba(255,255,255,.10); --lcs-accent: #8ab4ff; --lcs-accent-ink: #08101f;
+  --lcs-good: #4ade80; --lcs-bad: #ff7a7a; --lcs-warn: #fbbf24; --lcs-code: #0d1017;
+  --lcs-hsl-bg: 222 24% 7%; --lcs-hsl-card: 222 22% 10%; --lcs-hsl-muted: 222 20% 16%;
+  --lcs-hsl-fg: 222 25% 93%; --lcs-hsl-mfg: 220 16% 68%;
+}
+html[data-lcs-theme="paper"] {
+  color-scheme: light;
+  --lcs-bg0: #5a4230; --lcs-bg1: #f5ecd7; --lcs-bg2: #ebdfc3; --lcs-bg3: #e0d1af;
+  --lcs-text: #2d2418; --lcs-muted: #5e4f3a; --lcs-faint: #85735a;
+  --lcs-border: rgba(70,50,25,.28); --lcs-accent: #8a3b12; --lcs-accent-ink: #fff8ea;
+  --lcs-good: #1f6b34; --lcs-bad: #9c1f1f; --lcs-warn: #8a5a00; --lcs-code: #fbf5e4;
+  --lcs-hsl-bg: 36 52% 90%; --lcs-hsl-card: 40 55% 91%; --lcs-hsl-muted: 38 40% 83%;
+  --lcs-hsl-fg: 34 38% 14%; --lcs-hsl-mfg: 34 28% 30%;
+  --lcs-radius: 3px;
+}
+html[data-lcs-theme="arcade"] {
+  color-scheme: dark;
+  --lcs-bg0: #0f0b24; --lcs-bg1: #1a1440; --lcs-bg2: #261d5c; --lcs-bg3: #33288a;
+  --lcs-text: #f6f3ff; --lcs-muted: #c3bbf0; --lcs-faint: #8f86c9;
+  --lcs-border: #5648d4; --lcs-accent: #ffd23f; --lcs-accent-ink: #1b1400;
+  --lcs-good: #3df0a8; --lcs-bad: #ff5c7a; --lcs-warn: #ffd23f; --lcs-code: #120d2e;
+  --lcs-hsl-bg: 250 55% 10%; --lcs-hsl-card: 250 52% 16%; --lcs-hsl-muted: 250 48% 24%;
+  --lcs-hsl-fg: 252 100% 97%; --lcs-hsl-mfg: 250 62% 83%;
+  --lcs-radius: 2px;
+}
+html[data-lcs-theme="studio"] {
+  color-scheme: dark;
+  --lcs-alpha: .80;
+  --lcs-bg0: rgb(8 10 18 / .55); --lcs-bg1: rgb(12 15 26 / var(--lcs-alpha)); --lcs-bg2: rgb(22 26 42 / var(--lcs-alpha));
+  --lcs-bg3: rgb(34 40 62 / var(--lcs-alpha));
+  --lcs-text: #f3f5fb; --lcs-muted: #bcc4d8; --lcs-faint: #8d97b0;
+  --lcs-border: rgba(255,255,255,.16); --lcs-accent: #ff9ec7; --lcs-accent-ink: #2a0a19;
+  --lcs-good: #5eead4; --lcs-bad: #ff8a8a; --lcs-warn: #fcd34d; --lcs-code: rgb(10 12 22 / .88);
+  --lcs-hsl-bg: 226 30% 8%; --lcs-hsl-card: 226 30% 11%; --lcs-hsl-muted: 226 26% 18%;
+  --lcs-hsl-fg: 226 40% 96%; --lcs-hsl-mfg: 224 24% 76%;
+  --lcs-radius: 12px;
+}
+
+/* ---------- LeetCode variables ---------- */
+html[data-lcs-theme] {
+  --layer-01: var(--lcs-bg1); --layer-02: var(--lcs-bg2); --layer-03: var(--lcs-bg3);
+  --layer-bg-gray: var(--lcs-bg0); --layer-bg-pure: var(--lcs-bg0); --fill-pure: var(--lcs-bg0);
+  --fill-primary: var(--lcs-bg3); --fill-secondary: var(--lcs-bg2); --fill-tertiary: var(--lcs-bg2); --fill-quaternary: var(--lcs-bg1);
+  --border-primary: var(--lcs-border); --border-secondary: var(--lcs-border); --border-tertiary: var(--lcs-border); --border-quaternary: var(--lcs-border);
+  --text-primary: var(--lcs-text); --text-secondary: var(--lcs-muted); --text-tertiary: var(--lcs-faint); --text-quaternary: var(--lcs-faint);
+  --brand-orange: var(--lcs-accent);
+  --sd-background: var(--lcs-hsl-bg); --sd-background-gray: var(--lcs-hsl-bg); --sd-card: var(--lcs-hsl-card);
+  --sd-popover: var(--lcs-hsl-card); --sd-muted: var(--lcs-hsl-muted); --sd-secondary: var(--lcs-hsl-muted);
+  --sd-foreground: var(--lcs-hsl-fg); --sd-card-foreground: var(--lcs-hsl-fg); --sd-popover-foreground: var(--lcs-hsl-fg);
+  --sd-muted-foreground: var(--lcs-hsl-mfg); --sd-secondary-foreground: var(--lcs-hsl-fg);
+}
+
+/* ---------- Surfaces that ignore the variables ---------- */
+html[data-lcs-theme] body { background-color: var(--lcs-bg0) !important; color: var(--lcs-text); }
+html[data-lcs-theme] :is([class*="bg-layer-bg-gray"], [class*="bg-layer-bg-pure"], [class*="bg-paper"], [class*="bg-sd-background"]) {
+  background-color: var(--lcs-bg0) !important;
+}
+html[data-lcs-theme] :is([class*="bg-layer-1"], [class*="bg-layer-01"], [class*="bg-sd-card"], [class*="bg-lc-fill-01"], .flexlayout__tabset, .flexlayout__tabset_tabbar_outer) {
+  background-color: var(--lcs-bg1) !important;
+}
+html[data-lcs-theme] :is([class*="bg-layer-2"], [class*="bg-layer-02"], [class*="bg-sd-muted"], [class*="bg-sd-popover"], [class*="bg-sd-accent"], [class*="bg-fill-3"], [class*="bg-fill-secondary"], [class*="bg-fill-tertiary"]) {
+  background-color: var(--lcs-bg2) !important;
+}
+html[data-lcs-theme] :is([class*="bg-fill-4"], [class*="bg-overlay"]) { background-color: var(--lcs-bg3) !important; }
+html[data-lcs-theme] :is([class*="border-divider"], [class*="border-sd-border"], .flexlayout__splitter) { border-color: var(--lcs-border) !important; }
+html[data-lcs-theme] :is([class*="text-text-primary"], [class*="text-sd-foreground"], [class*="dark:text-dark-label-1"], [class*="text-label-1"]) { color: var(--lcs-text) !important; }
+html[data-lcs-theme] :is([class*="text-text-secondary"], [class*="text-sd-muted-foreground"], [class*="dark:text-dark-label-2"], [class*="text-label-2"], [class*="text-gray-6"], [class*="text-gray-7"], [class*="text-sd-gray-4"], [class*="text-sd-gray-5"]) { color: var(--lcs-muted) !important; }
+html[data-lcs-theme] :is([class*="text-text-tertiary"], [class*="dark:text-dark-label-3"], [class*="text-label-3"], [class*="text-gray-4"], [class*="text-gray-60"]) { color: var(--lcs-faint) !important; }
+html[data-lcs-theme] [class*="text-brand-orange"] { color: var(--lcs-accent) !important; }
+html[data-lcs-theme] a:focus-visible, html[data-lcs-theme] button:focus-visible, html[data-lcs-theme] [tabindex]:focus-visible {
+  outline: 2px solid var(--lcs-accent); outline-offset: 2px;
+}
+
+/* The editor: LeetCode's own Monaco theme is picked from its dark/light mode; only the surface is recoloured. */
+html[data-lcs-theme] :is(.monaco-editor, .monaco-editor-background, .monaco-editor .margin, .monaco-editor .inputarea.ime-input) {
+  background-color: var(--lcs-code) !important;
+}
+html[data-lcs-theme] .monaco-editor .current-line {
+  border: 0 !important; background-color: color-mix(in srgb, var(--lcs-text) 7%, transparent) !important;
+}
+html[data-lcs-theme] .monaco-editor .line-numbers { color: var(--lcs-faint) !important; }
+html[data-lcs-theme] .monaco-editor .cursors-layer .cursor { background-color: var(--lcs-accent) !important; border-color: var(--lcs-accent) !important; }
+
+/* Problem statement: one readable measure and calmer typography. */
+html[data-lcs-theme] [data-track-load="description_content"] { color: var(--lcs-text); line-height: 1.65; }
+html[data-lcs-theme] [data-track-load="description_content"] :is(code, pre) {
+  background-color: var(--lcs-bg2) !important; color: var(--lcs-text) !important; border-color: var(--lcs-border) !important;
+}
+html[data-lcs-theme] [data-track-load="description_content"] strong { color: var(--lcs-text); }
+
+/* ---------- Theme personality ---------- */
+html[data-lcs-theme="paper"] body, html[data-lcs-theme="paper"] [data-track-load="description_content"] {
+  font-family: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+}
+/* The desk is walnut, so the header becomes a cream strip: its dark text would vanish on the walnut. */
+html[data-lcs-theme="paper"] nav { background-color: var(--lcs-bg1) !important; border-bottom: 1px solid var(--lcs-border); }
+html[data-lcs-theme="paper"] nav :is(button, a, span):not([class*="text-brand-orange"]) { color: var(--lcs-text); }
+html[data-lcs-theme="paper"] .flexlayout__tabset { box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 6px 18px rgba(0,0,0,.35); }
+html[data-lcs-theme="paper"] [class*="text-brand-orange"] { color: var(--lcs-accent) !important; }
+html[data-lcs-theme="arcade"] :is(.flexlayout__tabset, .flexlayout__tab_button, button) { border-radius: 2px !important; }
+html[data-lcs-theme="arcade"] .flexlayout__tabset { box-shadow: 0 0 0 2px var(--lcs-border), 4px 4px 0 #05030f; }
+html[data-lcs-theme="arcade"] :is(h1, h2, [data-e2e-locator="question-title"]) { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; letter-spacing: .01em; }
+html[data-lcs-theme="studio"] { background: var(--lcs-bg-image, radial-gradient(1200px 700px at 78% 8%, #6b3fa0 0%, transparent 60%), radial-gradient(900px 600px at 10% 90%, #1f6f8b 0%, transparent 55%), linear-gradient(160deg, #1b1038 0%, #2b1b57 45%, #0f2a4a 100%)) center / cover fixed no-repeat !important; }
+html[data-lcs-theme="studio"] body { background-color: transparent !important; }
+html[data-lcs-theme="studio"] :is(.flexlayout__tabset, [class*="bg-layer-1"], [class*="bg-layer-01"], [class*="bg-sd-card"]) {
+  -webkit-backdrop-filter: blur(14px) saturate(1.1); backdrop-filter: blur(14px) saturate(1.1);
+}
+html[data-lcs-theme="studio"] .flexlayout__tabset { border-radius: 12px; }
+
+/* ---------- Blind mode ---------- */
+html[data-lcs-blind] :is([data-lcs-diff], a[href^="/tag/"], [class*="text-difficulty-"]):not([data-lcs-reveal]) {
+  filter: blur(7px); cursor: pointer; user-select: none; transition: filter .15s ease;
+}
+html[data-lcs-blind] :is([data-lcs-diff], a[href^="/tag/"], [class*="text-difficulty-"])[data-lcs-reveal] { transition: filter .15s ease; }
+@media (prefers-reduced-motion: reduce) { html[data-lcs-blind] * { transition: none !important; } }
+
+/* ---------- Solution lock ---------- */
+html[data-lcs-lock] :is(#editorial_tab, #solutions_tab)[data-lcs-locked]::after {
+  content: "🔒"; font-size: 11px; margin-left: 4px; opacity: .8;
+}
+
+/* ---------- Learning layer UI ---------- */
+.lcs-root {
+  --u-bg: #ffffff; --u-bg2: #f2f2f7; --u-text: #1c1c1e; --u-muted: #55555c; --u-border: rgba(60,60,67,.29);
+  --u-accent: #0a64d6; --u-accent-ink: #ffffff; --u-good: #1a7f37; --u-bad: #c4261d; --u-shadow: 0 8px 30px rgba(0,0,0,.22);
+  --u-radius: 12px;
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  color: var(--u-text); -webkit-font-smoothing: antialiased;
+}
+html.dark .lcs-root {
+  --u-bg: #1c1c1e; --u-bg2: #2c2c2e; --u-text: #f5f5f7; --u-muted: #aeaeb6; --u-border: rgba(235,235,245,.22);
+  --u-accent: #6aa8ff; --u-accent-ink: #06182f; --u-good: #4ade80; --u-bad: #ff8f87;
+}
+html[data-lcs-theme] .lcs-root {
+  --u-bg: var(--lcs-bg1); --u-bg2: var(--lcs-bg2); --u-text: var(--lcs-text); --u-muted: var(--lcs-muted); --u-border: var(--lcs-border);
+  --u-accent: var(--lcs-accent); --u-accent-ink: var(--lcs-accent-ink); --u-good: var(--lcs-good); --u-bad: var(--lcs-bad);
+  --u-radius: calc(var(--lcs-radius) + 4px);
+}
+html[data-lcs-theme="studio"] .lcs-root { --u-bg: rgb(14 17 30 / .92); --u-bg2: rgb(30 36 58 / .92); }
+.lcs-root *, .lcs-root *::before, .lcs-root *::after { box-sizing: border-box; }
+
+.lcs-dock {
+  position: fixed; right: 16px; bottom: 16px; z-index: 2147483000; display: flex; align-items: center; gap: 4px;
+  padding: 4px; background: var(--u-bg); border: 1px solid var(--u-border); border-radius: 999px; box-shadow: var(--u-shadow);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.lcs-dock[hidden] { display: none; }
+.lcs-time { min-width: 64px; padding: 0 10px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: .01em; }
+.lcs-time[data-idle="1"] { color: var(--u-muted); }
+.lcs-btn {
+  min-height: 44px; min-width: 44px; padding: 0 14px; border: 0; border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--u-text); font: inherit; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.lcs-btn:hover { background: var(--u-bg2); }
+.lcs-btn:focus-visible { outline: 2px solid var(--u-accent); outline-offset: 2px; }
+.lcs-btn.primary { background: var(--u-accent); color: var(--u-accent-ink); }
+.lcs-btn.primary:hover { filter: brightness(1.08); background: var(--u-accent); }
+.lcs-btn.boxed { border: 1px solid var(--u-border); border-radius: 10px; }
+.lcs-btn[aria-pressed="true"] { background: var(--u-bg2); box-shadow: inset 0 0 0 1px var(--u-accent); }
+.lcs-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--u-accent); }
+
+.lcs-sheet {
+  position: fixed; right: 16px; bottom: 76px; z-index: 2147483001; width: min(360px, calc(100vw - 32px));
+  max-height: min(78vh, 640px); overflow: auto; padding: 16px; background: var(--u-bg); border: 1px solid var(--u-border);
+  border-radius: var(--u-radius); box-shadow: var(--u-shadow); animation: lcs-rise .18s ease-out;
+}
+.lcs-sheet h2 { margin: 0 0 4px; font-size: 16px; font-weight: 650; }
+.lcs-sheet p { margin: 0 0 12px; color: var(--u-muted); }
+.lcs-sheet textarea {
+  width: 100%; min-height: 160px; resize: vertical; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--u-border);
+  background: var(--u-bg2); color: var(--u-text); font: 13px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+.lcs-sheet textarea:focus-visible, .lcs-sheet input:focus-visible { outline: 2px solid var(--u-accent); outline-offset: 1px; }
+.lcs-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lcs-chip {
+  min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--u-border); background: var(--u-bg2);
+  color: var(--u-text); font: inherit; cursor: pointer;
+}
+.lcs-chip:hover { border-color: var(--u-accent); }
+.lcs-chip[aria-pressed="true"] { background: var(--u-accent); color: var(--u-accent-ink); border-color: transparent; font-weight: 600; }
+.lcs-steps { list-style: none; margin: 0 0 4px; padding: 0; display: grid; gap: 8px; }
+.lcs-step { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 8px 8px 8px 10px; border: 1px solid var(--u-border); border-radius: 10px; background: var(--u-bg2); }
+.lcs-step b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--u-accent); color: var(--u-accent-ink); font-size: 13px; }
+.lcs-step[data-done="1"] { opacity: .6; }
+.lcs-step[data-done="1"] b { background: var(--u-good); }
+.lcs-meta { color: var(--u-muted); font-size: 12px; }
+
+.lcs-banner {
+  position: fixed; left: 50%; top: 18%; z-index: 2147483002; transform: translateX(-50%); max-width: min(92vw, 560px);
+  padding: 18px 34px; text-align: center; background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-radius);
+  box-shadow: var(--u-shadow); pointer-events: auto; cursor: pointer; animation: lcs-pop .38s cubic-bezier(.2,1.3,.4,1);
+}
+.lcs-banner strong { display: block; font-size: 26px; line-height: 1.15; letter-spacing: .01em; }
+.lcs-banner span { display: block; margin-top: 4px; color: var(--u-muted); }
+.lcs-banner[data-kind="good"] strong { color: var(--u-good); }
+.lcs-banner[data-kind="bad"] strong { color: var(--u-bad); }
+.lcs-banner[data-theme="paper"] { border: 3px double #3a2c1a; border-radius: 2px; background: #f7efdc; color: #2d2418; transform: translateX(-50%) rotate(-1.5deg); }
+.lcs-banner[data-theme="paper"] strong { font-family: Charter, Georgia, serif; text-transform: uppercase; letter-spacing: .08em; }
+.lcs-banner[data-theme="arcade"] { border: 3px solid #ffd23f; border-radius: 0; box-shadow: 6px 6px 0 #05030f; }
+.lcs-banner[data-theme="arcade"] strong { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 30px; text-transform: uppercase; }
+.lcs-banner[data-theme="studio"] strong { background: linear-gradient(90deg, #ff9ec7, #8ab4ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lcs-toast { position: fixed; left: 50%; bottom: 84px; z-index: 2147483002; transform: translateX(-50%); padding: 10px 16px; background: var(--u-bg); border: 1px solid var(--u-border); border-radius: 999px; box-shadow: var(--u-shadow); animation: lcs-rise .18s ease-out; }
+
+@keyframes lcs-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes lcs-pop { from { opacity: 0; transform: translateX(-50%) scale(.85); } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .lcs-sheet, .lcs-banner, .lcs-toast { animation: none; }
+}
+html[data-lcs-motion="off"] .lcs-sheet, html[data-lcs-motion="off"] .lcs-banner, html[data-lcs-motion="off"] .lcs-toast { animation: none; }
+@media (forced-colors: active) { .lcs-btn, .lcs-chip, .lcs-dock, .lcs-sheet { border: 1px solid CanvasText; } }
